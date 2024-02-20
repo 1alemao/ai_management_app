@@ -3,8 +3,12 @@ syntax = "proto3";
 
 package basic_ai_service;
 
+import "google/type/datetime.proto";
+
 // Interface exported by the server.
 service BasicCNNService {
+
+  rpc GetCurrentLoadedModel(None) returns (ModelInfo) {}
 
   // Loads a dataset from a file.
   //
@@ -14,7 +18,7 @@ service BasicCNNService {
   // Loads a trained model from a file.
   //
   // A summary of the loading process is returned.
-  rpc LoadTrainedModel(ModelData) returns (stream LoadingSummary) {}
+  rpc LoadTrainedModel(KerasModel) returns (stream LoadingSummary) {}
 
   // Loads the default CNN model.
   //
@@ -56,7 +60,7 @@ message SampleData {
 }
 
 // The sample data used for training the model.
-message ModelData { bytes json_model = 1; }
+message KerasModel { bytes model_data = 1; }
 
 message LoadingParameters {
   // For future use
@@ -118,3 +122,14 @@ message Base64Image {
   int32 width = 2;
   int32 height = 3;
 }
+
+message ModelInfo {
+  string modelId = 1;
+  string modelName = 2;
+  string modelDescription = 3;
+  string modelVersion = 4;
+  google.type.Datetime createdAt = 5;
+  google.type.Datetime lastUpdateAt = 6;
+}
+
+message None {}

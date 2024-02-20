@@ -1,23 +1,48 @@
-import 'package:ai_management_app/home_page/home_page.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-void main() {
-  runApp(const AiManagementApp());
+import 'package:ai_management_app/authentication/services/firebase_login_service.dart';
+import 'package:ai_management_app/routes/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+late final FirebaseApp app;
+late final FirebaseAuth auth;
+
+// Requires that the Firebase Auth emulator is running locally
+// e.g via `melos run firebase:emulator`.
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Firebase initialization
+  await Firebase.initializeApp(
+    options: firebaseOptions,
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => FirebaseLoginService()),
+      ],
+      child: const AiManagementApp(),
+    ),
+  );
 }
 
 class AiManagementApp extends StatelessWidget {
   const AiManagementApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final currentUser = context.watch<FirebaseLoginService>().auth.currentUser;
+    log('Current user: ${currentUser?.email}');
+    return MaterialApp.router(
       title: 'AI Management App',
+      routerConfig: AppRoutes.router(isAuthenticated: currentUser != null),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
     );
   }
 }

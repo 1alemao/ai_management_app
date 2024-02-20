@@ -1,5 +1,6 @@
 """The implementation of a basic gRPC AI server."""
 
+
 from basic_cnn_structure import BasicCNNStructure
 from concurrent import futures
 from controllers.inferer import InferController
@@ -15,8 +16,8 @@ import basic_cnn_service_pb2
 import basic_cnn_service_pb2_grpc
 import grpc
 import logging
-import time
 import subprocess
+import time
 
 class BasicCNNServicer(basic_cnn_service_pb2_grpc.BasicCNNService):
     """Provides methods that implement functionality of basic CNN server."""
@@ -163,7 +164,6 @@ def serve():
     server.wait_for_termination()
 
 def generate_protos():
-    logging.info("Generating protos...\n")
     protoc.main(
         (
             "",
@@ -182,7 +182,8 @@ if __name__ == "__main__":
         logging.info("\n---------------------\n"
                      "Basic CNN gRPC Server\n"
                      "---------------------\n")
-        # generate_protos()
+        logging.info("Generating protos...\n")
+        generate_protos()
         logging.info("Starting Envoy...\n")
         envoy = subprocess.Popen(["envoy", "-c", "envoy.yaml"])
         logging.info("Starting gRPC server...\n")
