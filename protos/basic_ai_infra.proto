@@ -1,0 +1,112 @@
+// Define basic messages for AI operations.
+syntax = "proto3";
+
+package basic_ai_infra;
+
+import "timestamp.proto";
+
+// The codes that indicated the status of the loading process.
+enum ProgressCode {
+  PROGRESS_UNSPECIFIED = 0;
+  PROGRESS_RUNNING = 1;
+  PROGRESS_FINISHED_OK = 2;
+  PROGRESS_FINISHED_ERROR = 3;
+}
+
+// The type of the data point.
+enum DataType {
+  DATA_TYPE_UNSPECIFIED = 0;
+  DATA_TYPE_FLOAT = 1;
+  DATA_TYPE_INT = 2;
+  DATA_TYPE_STRING = 3;
+  DATA_TYPE_IMAGE = 4;
+}
+
+// The sample data used for training the model.
+message SampleData {
+  bytes samples = 1;
+  repeated int32 labels = 2;
+}
+
+message LoadingParameters {
+  // For future use
+  string optional_parameter = 1;
+}
+
+// The summary containing the result of the loading process
+message LoadingSummary {
+  // The result of the loading process.
+  ProgressCode result_code = 1;
+
+  // The message describing the result of the loading process.
+  string result_message = 2;
+
+  // The time taken to load the data.
+  float elapsed_sec = 3;
+}
+
+message TrainingParameters {
+  // The number of epochs to train the model.
+  int32 epochs = 1;
+
+  // The batch size to train the model.
+  int32 batch_size = 2;
+
+  // The learning rate to train the model.
+  float learning_rate = 3;
+}
+
+// The summary containing the result of the loading process
+message TrainingSummary {
+  // The result of the training process.
+  ProgressCode result_code = 1;
+
+  // The message describing the result of the training process.
+  string result_message = 2;
+
+  // The time taken to train the model.
+  int32 elapsed_nsec = 3;
+}
+
+// The data point used for infering a result.
+message DataPoint {
+  // The result of the training process.
+  string data = 1;
+
+  // The type of the data point.
+  DataType type = 2;
+}
+
+// The result of the infering process.
+message InferingResult {
+  // The result of the training process.
+  string result = 1;
+}
+
+message Base64Image {
+  bytes data = 1;
+  int32 width = 2;
+  int32 height = 3;
+}
+
+// The sample data used for training the model.
+message KerasModel { bytes model_data = 1; }
+
+message ModelInfo {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string version = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message Empty {
+  // For future use
+  optional string optional_parameter = 1;
+}
+
+Sequential() Flatten(input_shape = (IMG_HEIGHT, IMG_WIDTH))
+    Dense(units = 200, activation = tf.nn.relu)
+        Dense(units = 100, activation = tf.nn.relu)
+            Dense(10, activation = tf.nn.softmax)

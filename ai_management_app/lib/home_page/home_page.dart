@@ -1,4 +1,6 @@
+import 'package:ai_management_app/ai_services/pages/what_image_is_this.dart';
 import 'package:ai_management_app/authentication/services/firebase_login_service.dart';
+import 'package:ai_management_app/home_page/widgets/current_model_widget.dart';
 import 'package:ai_management_app/home_page/widgets/model_training_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +20,19 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: ModelTrainingWidget(),
+      body: Wrap(
+        children: [
+          const CurrentLoadedModelWidget(),
+          const ModelTrainingWidget(),
+          TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const WhatImageIsThisPage(),
+              ),
+            ),
+            child: const Text("What image is this?"),
+          ),
+        ],
       ),
     );
   }

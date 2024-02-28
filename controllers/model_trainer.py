@@ -1,4 +1,4 @@
-from basic_cnn_service_pb2 import TrainingParameters
+from basic_ai_infra_pb2 import TrainingParameters
 from basic_cnn_structure import BasicCNNStructure
 
 

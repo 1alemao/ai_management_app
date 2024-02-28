@@ -1,5 +1,5 @@
-import 'package:ai_management_app/generated/protos/basic_cnn_service.pbgrpc.dart';
-import 'package:ai_management_app/grpc_client/grpc_client.dart';
+import 'package:ai_management_app/generated/protos/basic_ai_infra.pb.dart';
+import 'package:ai_management_app/grpc_client/ai_service_grpc_client.dart';
 import 'package:flutter/material.dart';
 
 class ModelTrainingWidget extends StatefulWidget {

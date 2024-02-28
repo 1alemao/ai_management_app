@@ -3,133 +3,41 @@ syntax = "proto3";
 
 package basic_ai_service;
 
-import "google/type/datetime.proto";
+import "basic_ai_infra.proto";
 
 // Interface exported by the server.
 service BasicCNNService {
 
-  rpc GetCurrentLoadedModel(None) returns (ModelInfo) {}
+  rpc GetCurrentLoadedModel(basic_ai_infra.Empty)
+      returns (basic_ai_infra.ModelInfo) {}
 
   // Loads a dataset from a file.
   //
   // A summary of the loading process is returned.
-  rpc LoadSampleData(SampleData) returns (stream LoadingSummary) {}
+  rpc LoadSampleData(basic_ai_infra.SampleData)
+      returns (stream basic_ai_infra.LoadingSummary) {}
 
   // Loads a trained model from a file.
   //
   // A summary of the loading process is returned.
-  rpc LoadTrainedModel(KerasModel) returns (stream LoadingSummary) {}
+  rpc LoadTrainedModel(basic_ai_infra.KerasModel)
+      returns (stream basic_ai_infra.LoadingSummary) {}
 
   // Loads the default CNN model.
   //
   // A summary of the loading pr ocess is returned.
-  rpc LoadDefaultModel(LoadingParameters) returns (stream LoadingSummary) {}
+  rpc LoadDefaultModel(basic_ai_infra.LoadingParameters)
+      returns (stream basic_ai_infra.LoadingSummary) {}
 
   // Trains a model using the loaded dataset.
   //
   // A summary of the training process is returned.
-  rpc TrainModel(TrainingParameters) returns (stream TrainingSummary) {}
+  rpc TrainModel(basic_ai_infra.TrainingParameters)
+      returns (stream basic_ai_infra.TrainingSummary) {}
 
   // Infer a result from a given data point.
   //
   // The result is returned.
-  rpc WhatImageIsThis(Base64Image) returns (stream InferingResult) {}
+  rpc WhatImageIsThis(basic_ai_infra.Base64Image)
+      returns (stream basic_ai_infra.InferingResult) {}
 }
-
-// The codes that indicated the status of the loading process.
-enum ProgressCode {
-  PROGRESS_UNSPECIFIED = 0;
-  PROGRESS_RUNNING = 1;
-  PROGRESS_FINISHED_OK = 2;
-  PROGRESS_FINISHED_ERROR = 3;
-}
-
-// The type of the data point.
-enum DataType {
-  DATA_TYPE_UNSPECIFIED = 0;
-  DATA_TYPE_FLOAT = 1;
-  DATA_TYPE_INT = 2;
-  DATA_TYPE_STRING = 3;
-  DATA_TYPE_IMAGE = 4;
-}
-
-// The sample data used for training the model.
-message SampleData {
-  bytes samples = 1;
-  repeated int32 labels = 2;
-}
-
-// The sample data used for training the model.
-message KerasModel { bytes model_data = 1; }
-
-message LoadingParameters {
-  // For future use
-  string optional_parameter = 1;
-}
-
-// The summary containing the result of the loading process
-message LoadingSummary {
-  // The result of the loading process.
-  ProgressCode result_code = 1;
-
-  // The message describing the result of the loading process.
-  string result_message = 2;
-
-  // The time taken to load the data.
-  float elapsed_sec = 3;
-}
-
-message TrainingParameters {
-  // The number of epochs to train the model.
-  int32 epochs = 1;
-
-  // The batch size to train the model.
-  int32 batch_size = 2;
-
-  // The learning rate to train the model.
-  float learning_rate = 3;
-}
-
-// The summary containing the result of the loading process
-message TrainingSummary {
-  // The result of the training process.
-  ProgressCode result_code = 1;
-
-  // The message describing the result of the training process.
-  string result_message = 2;
-
-  // The time taken to train the model.
-  int32 elapsed_nsec = 3;
-}
-
-// The data point used for infering a result.
-message DataPoint {
-  // The result of the training process.
-  string data = 1;
-
-  // The type of the data point.
-  DataType type = 2;
-}
-
-// The result of the infering process.
-message InferingResult {
-  // The result of the training process.
-  string result = 1;
-}
-
-message Base64Image {
-  bytes data = 1;
-  int32 width = 2;
-  int32 height = 3;
-}
-
-message ModelInfo {
-  string modelId = 1;
-  string modelName = 2;
-  string modelDescription = 3;
-  string modelVersion = 4;
-  google.type.Datetime createdAt = 5;
-  google.type.Datetime lastUpdateAt = 6;
-}
-
-message None {}

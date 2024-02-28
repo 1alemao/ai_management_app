@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package keras_model;
+
+message Layer {
+  oneof layer {
+    Flatten flatten = 1;
+    Dense dense = 2;
+    Conv2D conv2d = 3;
+    MaxPooling2D maxpooling2d = 4;
+  }
+}
+
+message Flatten {
+  int32 input_shape = 1;
+  int32 units = 2;
+  string activation = 3;
+}
+
+message Dense {
+  int32 units = 1;
+  string activation = 2;
+}
+
+message Conv2D {
+  int32 filters = 1;
+  int32 kernel_size = 2;
+  string activation = 3;
+  int32 input_shape = 4;
+}
+
+message MaxPooling2D { int32 pool_size = 1; }
+
+message Sequential { repeated Layer layers = 1; }

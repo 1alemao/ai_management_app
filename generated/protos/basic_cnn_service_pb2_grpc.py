@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import basic_cnn_service_pb2 as basic__cnn__service__pb2
+import basic_ai_infra_pb2 as basic__ai__infra__pb2
 
 
 class BasicCNNServiceStub(object):
@@ -15,36 +15,47 @@ class BasicCNNServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.GetCurrentLoadedModel = channel.unary_unary(
+                '/basic_ai_service.BasicCNNService/GetCurrentLoadedModel',
+                request_serializer=basic__ai__infra__pb2.Empty.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.ModelInfo.FromString,
+                )
         self.LoadSampleData = channel.unary_stream(
                 '/basic_ai_service.BasicCNNService/LoadSampleData',
-                request_serializer=basic__cnn__service__pb2.SampleData.SerializeToString,
-                response_deserializer=basic__cnn__service__pb2.LoadingSummary.FromString,
+                request_serializer=basic__ai__infra__pb2.SampleData.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.LoadingSummary.FromString,
                 )
         self.LoadTrainedModel = channel.unary_stream(
                 '/basic_ai_service.BasicCNNService/LoadTrainedModel',
-                request_serializer=basic__cnn__service__pb2.ModelData.SerializeToString,
-                response_deserializer=basic__cnn__service__pb2.LoadingSummary.FromString,
+                request_serializer=basic__ai__infra__pb2.KerasModel.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.LoadingSummary.FromString,
                 )
         self.LoadDefaultModel = channel.unary_stream(
                 '/basic_ai_service.BasicCNNService/LoadDefaultModel',
-                request_serializer=basic__cnn__service__pb2.LoadingParameters.SerializeToString,
-                response_deserializer=basic__cnn__service__pb2.LoadingSummary.FromString,
+                request_serializer=basic__ai__infra__pb2.LoadingParameters.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.LoadingSummary.FromString,
                 )
         self.TrainModel = channel.unary_stream(
                 '/basic_ai_service.BasicCNNService/TrainModel',
-                request_serializer=basic__cnn__service__pb2.TrainingParameters.SerializeToString,
-                response_deserializer=basic__cnn__service__pb2.TrainingSummary.FromString,
+                request_serializer=basic__ai__infra__pb2.TrainingParameters.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.TrainingSummary.FromString,
                 )
         self.WhatImageIsThis = channel.unary_stream(
                 '/basic_ai_service.BasicCNNService/WhatImageIsThis',
-                request_serializer=basic__cnn__service__pb2.Base64Image.SerializeToString,
-                response_deserializer=basic__cnn__service__pb2.InferingResult.FromString,
+                request_serializer=basic__ai__infra__pb2.Base64Image.SerializeToString,
+                response_deserializer=basic__ai__infra__pb2.InferingResult.FromString,
                 )
 
 
 class BasicCNNServiceServicer(object):
     """Interface exported by the server.
     """
+
+    def GetCurrentLoadedModel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def LoadSampleData(self, request, context):
         """Loads a dataset from a file.
@@ -94,30 +105,35 @@ class BasicCNNServiceServicer(object):
 
 def add_BasicCNNServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'GetCurrentLoadedModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCurrentLoadedModel,
+                    request_deserializer=basic__ai__infra__pb2.Empty.FromString,
+                    response_serializer=basic__ai__infra__pb2.ModelInfo.SerializeToString,
+            ),
             'LoadSampleData': grpc.unary_stream_rpc_method_handler(
                     servicer.LoadSampleData,
-                    request_deserializer=basic__cnn__service__pb2.SampleData.FromString,
-                    response_serializer=basic__cnn__service__pb2.LoadingSummary.SerializeToString,
+                    request_deserializer=basic__ai__infra__pb2.SampleData.FromString,
+                    response_serializer=basic__ai__infra__pb2.LoadingSummary.SerializeToString,
             ),
             'LoadTrainedModel': grpc.unary_stream_rpc_method_handler(
                     servicer.LoadTrainedModel,
-                    request_deserializer=basic__cnn__service__pb2.ModelData.FromString,
-                    response_serializer=basic__cnn__service__pb2.LoadingSummary.SerializeToString,
+                    request_deserializer=basic__ai__infra__pb2.KerasModel.FromString,
+                    response_serializer=basic__ai__infra__pb2.LoadingSummary.SerializeToString,
             ),
             'LoadDefaultModel': grpc.unary_stream_rpc_method_handler(
                     servicer.LoadDefaultModel,
-                    request_deserializer=basic__cnn__service__pb2.LoadingParameters.FromString,
-                    response_serializer=basic__cnn__service__pb2.LoadingSummary.SerializeToString,
+                    request_deserializer=basic__ai__infra__pb2.LoadingParameters.FromString,
+                    response_serializer=basic__ai__infra__pb2.LoadingSummary.SerializeToString,
             ),
             'TrainModel': grpc.unary_stream_rpc_method_handler(
                     servicer.TrainModel,
-                    request_deserializer=basic__cnn__service__pb2.TrainingParameters.FromString,
-                    response_serializer=basic__cnn__service__pb2.TrainingSummary.SerializeToString,
+                    request_deserializer=basic__ai__infra__pb2.TrainingParameters.FromString,
+                    response_serializer=basic__ai__infra__pb2.TrainingSummary.SerializeToString,
             ),
             'WhatImageIsThis': grpc.unary_stream_rpc_method_handler(
                     servicer.WhatImageIsThis,
-                    request_deserializer=basic__cnn__service__pb2.Base64Image.FromString,
-                    response_serializer=basic__cnn__service__pb2.InferingResult.SerializeToString,
+                    request_deserializer=basic__ai__infra__pb2.Base64Image.FromString,
+                    response_serializer=basic__ai__infra__pb2.InferingResult.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -131,6 +147,23 @@ class BasicCNNService(object):
     """
 
     @staticmethod
+    def GetCurrentLoadedModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/basic_ai_service.BasicCNNService/GetCurrentLoadedModel',
+            basic__ai__infra__pb2.Empty.SerializeToString,
+            basic__ai__infra__pb2.ModelInfo.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def LoadSampleData(request,
             target,
             options=(),
@@ -142,8 +175,8 @@ class BasicCNNService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/basic_ai_service.BasicCNNService/LoadSampleData',
-            basic__cnn__service__pb2.SampleData.SerializeToString,
-            basic__cnn__service__pb2.LoadingSummary.FromString,
+            basic__ai__infra__pb2.SampleData.SerializeToString,
+            basic__ai__infra__pb2.LoadingSummary.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,8 +192,8 @@ class BasicCNNService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/basic_ai_service.BasicCNNService/LoadTrainedModel',
-            basic__cnn__service__pb2.ModelData.SerializeToString,
-            basic__cnn__service__pb2.LoadingSummary.FromString,
+            basic__ai__infra__pb2.KerasModel.SerializeToString,
+            basic__ai__infra__pb2.LoadingSummary.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -176,8 +209,8 @@ class BasicCNNService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/basic_ai_service.BasicCNNService/LoadDefaultModel',
-            basic__cnn__service__pb2.LoadingParameters.SerializeToString,
-            basic__cnn__service__pb2.LoadingSummary.FromString,
+            basic__ai__infra__pb2.LoadingParameters.SerializeToString,
+            basic__ai__infra__pb2.LoadingSummary.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -193,8 +226,8 @@ class BasicCNNService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/basic_ai_service.BasicCNNService/TrainModel',
-            basic__cnn__service__pb2.TrainingParameters.SerializeToString,
-            basic__cnn__service__pb2.TrainingSummary.FromString,
+            basic__ai__infra__pb2.TrainingParameters.SerializeToString,
+            basic__ai__infra__pb2.TrainingSummary.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -210,7 +243,7 @@ class BasicCNNService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/basic_ai_service.BasicCNNService/WhatImageIsThis',
-            basic__cnn__service__pb2.Base64Image.SerializeToString,
-            basic__cnn__service__pb2.InferingResult.FromString,
+            basic__ai__infra__pb2.Base64Image.SerializeToString,
+            basic__ai__infra__pb2.InferingResult.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -1,8 +1,9 @@
+import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Iterable as _Iterable, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -37,12 +38,6 @@ class SampleData(_message.Message):
     samples: bytes
     labels: _containers.RepeatedScalarFieldContainer[int]
     def __init__(self, samples: _Optional[bytes] = ..., labels: _Optional[_Iterable[int]] = ...) -> None: ...
-
-class ModelData(_message.Message):
-    __slots__ = ("json_model",)
-    JSON_MODEL_FIELD_NUMBER: _ClassVar[int]
-    json_model: bytes
-    def __init__(self, json_model: _Optional[bytes] = ...) -> None: ...
 
 class LoadingParameters(_message.Message):
     __slots__ = ("optional_parameter",)
@@ -103,3 +98,31 @@ class Base64Image(_message.Message):
     width: int
     height: int
     def __init__(self, data: _Optional[bytes] = ..., width: _Optional[int] = ..., height: _Optional[int] = ...) -> None: ...
+
+class KerasModel(_message.Message):
+    __slots__ = ("model_data",)
+    MODEL_DATA_FIELD_NUMBER: _ClassVar[int]
+    model_data: bytes
+    def __init__(self, model_data: _Optional[bytes] = ...) -> None: ...
+
+class ModelInfo(_message.Message):
+    __slots__ = ("id", "name", "description", "version", "createdAt", "updatedAt")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    CREATEDAT_FIELD_NUMBER: _ClassVar[int]
+    UPDATEDAT_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    name: str
+    description: str
+    version: str
+    createdAt: _timestamp_pb2.Timestamp
+    updatedAt: _timestamp_pb2.Timestamp
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., version: _Optional[str] = ..., createdAt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., updatedAt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class Empty(_message.Message):
+    __slots__ = ("optional_parameter",)
+    OPTIONAL_PARAMETER_FIELD_NUMBER: _ClassVar[int]
+    optional_parameter: str
+    def __init__(self, optional_parameter: _Optional[str] = ...) -> None: ...

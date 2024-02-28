@@ -1,11 +1,15 @@
 import logging
 import tensorflow as tf
 from tensorflow import keras
+import keras_nlp
 from keras import Sequential
 from keras.layers import Flatten, Dense
 import numpy as np
+import os
 
-DEFAULT_MODEL_PATH = "default_model.keras"
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
+DEFAULT_MODEL_PATH = "saved_models/default_model.keras"
 
 class BasicCNNStructure:
     MODEL_IMG_WIDTH = 28
@@ -17,6 +21,9 @@ class BasicCNNStructure:
         self._init_default_model()
         assert self._model is not None, "Could create or load default model"
         print(self._model.summary())
+
+    def current_model(self) :
+        return self._model
 
     def save_model_to_file(self):
         logging.info("Saving model to file: %s", DEFAULT_MODEL_PATH)
@@ -38,7 +45,8 @@ class BasicCNNStructure:
 
     def _init_default_model(self):
         self._load_default_training_set()
-        self.load_model_from_file()
+        # self.load_model_from_file()
+        self.load_gemma_7b_model()
         if self._model is None:
             self._create_default_model()
             self.compile_model()
@@ -149,4 +157,11 @@ class BasicCNNStructure:
                 str(highest_prob_value*100) +
                 "%")
     
-
+    def load_gemma_7b_model(self):
+        logging.info("Loading gemma_7b model from file: gemma_7b/config.json")
+        json_file = open("gemma_7b/config.json", "r")
+        loaded_model_json = json_file.read()
+        json_file.close()
+        self._model = keras.models.model_from_json(loaded_model_json)
+        print(self._model.summary())
+        self._model.generate("What is the meaning of life?", max_length=64)

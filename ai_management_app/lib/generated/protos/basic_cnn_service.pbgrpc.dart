@@ -15,19 +15,23 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'basic_cnn_service.pb.dart' as $0;
+import 'basic_ai_infra.pb.dart' as $0;
 
 export 'basic_cnn_service.pb.dart';
 
 @$pb.GrpcServiceName('basic_ai_service.BasicCNNService')
 class BasicCNNServiceClient extends $grpc.Client {
+  static final _$getCurrentLoadedModel = $grpc.ClientMethod<$0.Empty, $0.ModelInfo>(
+      '/basic_ai_service.BasicCNNService/GetCurrentLoadedModel',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.ModelInfo.fromBuffer(value));
   static final _$loadSampleData = $grpc.ClientMethod<$0.SampleData, $0.LoadingSummary>(
       '/basic_ai_service.BasicCNNService/LoadSampleData',
       ($0.SampleData value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.LoadingSummary.fromBuffer(value));
-  static final _$loadTrainedModel = $grpc.ClientMethod<$0.ModelData, $0.LoadingSummary>(
+  static final _$loadTrainedModel = $grpc.ClientMethod<$0.KerasModel, $0.LoadingSummary>(
       '/basic_ai_service.BasicCNNService/LoadTrainedModel',
-      ($0.ModelData value) => value.writeToBuffer(),
+      ($0.KerasModel value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.LoadingSummary.fromBuffer(value));
   static final _$loadDefaultModel = $grpc.ClientMethod<$0.LoadingParameters, $0.LoadingSummary>(
       '/basic_ai_service.BasicCNNService/LoadDefaultModel',
@@ -48,11 +52,15 @@ class BasicCNNServiceClient extends $grpc.Client {
       : super(channel, options: options,
         interceptors: interceptors);
 
+  $grpc.ResponseFuture<$0.ModelInfo> getCurrentLoadedModel($0.Empty request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getCurrentLoadedModel, request, options: options);
+  }
+
   $grpc.ResponseStream<$0.LoadingSummary> loadSampleData($0.SampleData request, {$grpc.CallOptions? options}) {
     return $createStreamingCall(_$loadSampleData, $async.Stream.fromIterable([request]), options: options);
   }
 
-  $grpc.ResponseStream<$0.LoadingSummary> loadTrainedModel($0.ModelData request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.LoadingSummary> loadTrainedModel($0.KerasModel request, {$grpc.CallOptions? options}) {
     return $createStreamingCall(_$loadTrainedModel, $async.Stream.fromIterable([request]), options: options);
   }
 
@@ -74,6 +82,13 @@ abstract class BasicCNNServiceBase extends $grpc.Service {
   $core.String get $name => 'basic_ai_service.BasicCNNService';
 
   BasicCNNServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.ModelInfo>(
+        'GetCurrentLoadedModel',
+        getCurrentLoadedModel_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.ModelInfo value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SampleData, $0.LoadingSummary>(
         'LoadSampleData',
         loadSampleData_Pre,
@@ -81,12 +96,12 @@ abstract class BasicCNNServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.SampleData.fromBuffer(value),
         ($0.LoadingSummary value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.ModelData, $0.LoadingSummary>(
+    $addMethod($grpc.ServiceMethod<$0.KerasModel, $0.LoadingSummary>(
         'LoadTrainedModel',
         loadTrainedModel_Pre,
         false,
         true,
-        ($core.List<$core.int> value) => $0.ModelData.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.KerasModel.fromBuffer(value),
         ($0.LoadingSummary value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.LoadingParameters, $0.LoadingSummary>(
         'LoadDefaultModel',
@@ -111,11 +126,15 @@ abstract class BasicCNNServiceBase extends $grpc.Service {
         ($0.InferingResult value) => value.writeToBuffer()));
   }
 
+  $async.Future<$0.ModelInfo> getCurrentLoadedModel_Pre($grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return getCurrentLoadedModel(call, await request);
+  }
+
   $async.Stream<$0.LoadingSummary> loadSampleData_Pre($grpc.ServiceCall call, $async.Future<$0.SampleData> request) async* {
     yield* loadSampleData(call, await request);
   }
 
-  $async.Stream<$0.LoadingSummary> loadTrainedModel_Pre($grpc.ServiceCall call, $async.Future<$0.ModelData> request) async* {
+  $async.Stream<$0.LoadingSummary> loadTrainedModel_Pre($grpc.ServiceCall call, $async.Future<$0.KerasModel> request) async* {
     yield* loadTrainedModel(call, await request);
   }
 
@@ -131,8 +150,9 @@ abstract class BasicCNNServiceBase extends $grpc.Service {
     yield* whatImageIsThis(call, await request);
   }
 
+  $async.Future<$0.ModelInfo> getCurrentLoadedModel($grpc.ServiceCall call, $0.Empty request);
   $async.Stream<$0.LoadingSummary> loadSampleData($grpc.ServiceCall call, $0.SampleData request);
-  $async.Stream<$0.LoadingSummary> loadTrainedModel($grpc.ServiceCall call, $0.ModelData request);
+  $async.Stream<$0.LoadingSummary> loadTrainedModel($grpc.ServiceCall call, $0.KerasModel request);
   $async.Stream<$0.LoadingSummary> loadDefaultModel($grpc.ServiceCall call, $0.LoadingParameters request);
   $async.Stream<$0.TrainingSummary> trainModel($grpc.ServiceCall call, $0.TrainingParameters request);
   $async.Stream<$0.InferingResult> whatImageIsThis($grpc.ServiceCall call, $0.Base64Image request);

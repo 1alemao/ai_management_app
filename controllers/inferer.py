@@ -1,6 +1,8 @@
+import sys
+
 import io
-from basic_cnn_service_pb2 import Base64Image
 from basic_cnn_structure import BasicCNNStructure
+from basic_ai_infra_pb2 import Base64Image
 import numpy as np
 import tensorflow as tf
 from PIL import Image, ImageOps
@@ -36,7 +38,7 @@ class InferController:
         
         pil_image = ImageOps.mirror(pil_image)
         
-        pil_image.show()
+        # pil_image.show()
 
         # Convert the bytes object to a numpy array
         input_arr = tf.keras.utils.img_to_array(pil_image)
